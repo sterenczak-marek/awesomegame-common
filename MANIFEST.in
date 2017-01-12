@@ -1,0 +1,6 @@
+include LICENSE
+include README.rst
+recursive-include awesome_users/static *
+recursive-include awesome_users/templates *
+recursive-include awesome_rooms/static *
+recursive-include awesome_rooms/templates *
