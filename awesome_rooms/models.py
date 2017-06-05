@@ -9,16 +9,16 @@ from django.utils.translation import ugettext as _
 
 
 @python_2_unicode_compatible
-class Room(models.Model):
+class AbstractRoom(models.Model):
+
     name = models.CharField("Nazwa pokoju", max_length=100)
     slug = models.SlugField(unique=True, blank=True)
 
     max_players = IntegerRangeField("Maksymalna liczba graczy", default=4, min_value=2, max_value=6)
 
-    status = models.IntegerField(default=0)
-
     class Meta:
         db_table = 'rooms'
+        abstract = True
 
     def __str__(self):
         return self.name
@@ -29,8 +29,8 @@ class Room(models.Model):
             self.slug = orig = slugify(self.name)
 
             for x in itertools.count(1):
-                if not Room.objects.filter(slug=self.slug).exists():
+                if not self.__class__.objects.filter(slug=self.slug).exists():
                     break
                 self.slug = '%s-%d' % (orig, x)
 
-        return super(Room, self).save(*args, **kwargs)
+        return super(AbstractRoom, self).save(*args, **kwargs)

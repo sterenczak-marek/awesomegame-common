@@ -6,7 +6,7 @@ from django import forms
 from djng.forms import NgModelFormMixin, NgFormValidationMixin, NgModelForm
 from djng.styling.bootstrap3.forms import Bootstrap3Form, Bootstrap3FormMixin
 
-from .models import Room
+from .models import AbstractRoom
 
 
 class RoomForm(NgModelFormMixin, Bootstrap3FormMixin, NgModelForm):
@@ -20,5 +20,5 @@ class RoomForm(NgModelFormMixin, Bootstrap3FormMixin, NgModelForm):
         super(RoomForm, self).__init__(*args, **kwargs)
 
     class Meta:
-        model = Room
+        model = AbstractRoom
         exclude = ['slug', 'admin']

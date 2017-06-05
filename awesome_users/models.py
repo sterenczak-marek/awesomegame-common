@@ -4,7 +4,9 @@ from __future__ import unicode_literals, absolute_import
 import random
 import string
 
-from awesome_rooms.models import Room
+from django.conf import settings
+
+from awesome_rooms.models import AbstractRoom
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import UserManager, AbstractUser
 from django.core import validators
@@ -18,7 +20,6 @@ from django.utils.translation import ugettext_lazy as _
 
 @python_2_unicode_compatible
 class GameUser(AbstractUser):
-
     # username = models.CharField(
     #     _('username'), max_length=30, unique=True,
     #     help_text=_('Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.'),
@@ -39,7 +40,6 @@ class GameUser(AbstractUser):
 
     is_guest = models.BooleanField(default=False)
 
-    room = models.ForeignKey(Room, null=True, on_delete=models.SET_NULL, related_name='users')
     is_admin = models.BooleanField(default=False)
     ready_to_play = models.BooleanField(default=False)
 
@@ -51,6 +51,7 @@ class GameUser(AbstractUser):
     objects = UserManager()
 
     class Meta:
+        abstract = True
         db_table = 'users'
 
     def __str__(self):
@@ -74,7 +75,6 @@ class GameUser(AbstractUser):
     def get_session_auth_hash(self):
         key_salt = "awesome_users.models.GameUser.get_session_auth_hash"
         return salted_hmac(key_salt, self.login_token).hexdigest()
-
 
     @staticmethod
     def create_guest():
